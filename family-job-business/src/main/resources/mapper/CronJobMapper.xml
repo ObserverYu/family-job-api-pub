@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.chen.dao.CronJobMapper">
+ 
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="org.chen.domain.entity.CronJob">
+        <id column="id" property="id"/>
+        <result column="type" property="type"/>
+        <result column="state" property="state"/>
+        <result column="job_id" property="jobId"/>
+        <result column="name" property="name"/>
+        <result column="type_id" property="typeId"/>
+        <result column="family_id" property="familyId"/>
+        <result column="user_id" property="userId"/>
+        <result column="user_avatar" property="userAvatar"/>
+        <result column="user_name" property="userName"/>
+        <result column="watchdog_id" property="watchdogId"/>
+        <result column="watchdog_name" property="watchdogName"/>
+        <result column="watchdog_avatar" property="watchdogAvatar"/>
+        <result column="points" property="points"/>
+        <result column="times" property="times"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+    </resultMap>
+ 
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+            t.id,
+            t.type,
+            t.state,
+            t.job_id,
+            t.name,
+            t.type_id,
+            t.family_id,
+            t.user_id,
+            t.user_avatar,
+            t.user_name,
+            t.watchdog_id,
+            t.watchdog_name,
+            t.watchdog_avatar,
+            t.points,
+            t.times,
+            t.create_time,
+            t.update_time,
+    </sql>
+
+
+    <update id="updateCronJobWithLock">
+        UPDATE cron_job
+        SET update_time = #{cronJob.updateTime}
+        ,state = #{cronJob.state}
+        ,type = #{cronJob.type}
+        ,version = #{cronJob.version} + 1
+        WHERE id = #{cronJob.id} AND version = #{cronJob.version}
+    </update>
+</mapper>

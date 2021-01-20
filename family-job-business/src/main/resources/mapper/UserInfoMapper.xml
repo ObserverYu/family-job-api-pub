@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.chen.dao.UserInfoMapper">
+ 
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="org.chen.domain.entity.UserInfo">
+        <id column="id" property="id"/>
+        <result column="gmt_create" property="gmtCreate"/>
+        <result column="gmt_modified" property="gmtModified"/>
+        <result column="nick_name" property="nickName"/>
+        <result column="open_id" property="openId"/>
+        <result column="family_id" property="familyId"/>
+        <result column="avatar" property="avatar"/>
+        <result column="invite_code" property="inviteCode"/>
+        <result column="family_owner" property="familyOwner"/>
+    </resultMap>
+ 
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+            t.id,
+            t.gmt_create,
+            t.gmt_modified,
+            t.nick_name,
+            t.open_id,
+            t.family_id,
+            t.avatar,
+            t.invite_code,
+            t.family_owner,
+    </sql>
+
+    <update id="updateRoleWithVersionLock">
+        UPDATE user_info
+        SET family_owner = #{userInfo.familyOwner}
+            ,update_time = #{userInfo.updateTime}
+            ,version = #{userInfo.version} + 1
+            ,family_id = #{userInfo.familyId}
+            ,last_join_time = #{userInfo.lastJoinTime}
+            ,watchdog_id = #{userInfo.watchdogId}
+            ,watchdog_name = #{userInfo.watchdogName}
+            ,watchdog_avatar = #{userInfo.watchdogAvatar}
+            ,points = #{userInfo.points}
+            ,can_send = #{userInfo.canSend}
+        WHERE id = #{userInfo.id}
+        AND version = #{userInfo.version}
+    </update>
+</mapper>

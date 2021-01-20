@@ -1,0 +1,36 @@
+spring:
+
+  profiles:
+    active: prod
+
+  application:
+    name: family_job
+
+  redis:
+    database: 0
+    #连接池配置
+    pool:
+      size: 10
+      maxIdleSize: 16
+      minIdleSize: 8
+
+
+#全局使用关联nacos的负载均衡规则 如果为false则全局使用轮询规则
+ribbon:
+  nacosBalancer: false
+
+# feign全局默认配置
+feign:
+  client:
+    config:
+      # 全局配置
+      default:
+        connectTimeout: 5000
+        readTimeout: 5000
+        loggerLevel: basic
+  okhttp:
+    enabled: false
+  httpclient:
+    enabled: false
+  hystrix:
+    enabled: false

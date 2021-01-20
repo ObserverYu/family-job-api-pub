@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration status="debug">
+
+	<Properties>
+		<Property name="APP_NAME" value="${ctx:spring.application.name}"/>
+		<Property name="PACKAGE" value="${ctx:logging.package}"/>
+		<Property name="LEVEL" value="${ctx:logging.pattern.level}"/>
+		<Property name="FILE_PATH" value="${ctx:logging.path}/${APP_NAME}"/>
+		<Property name="PATTERN" value="%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level ${APP_NAME} [%t] [%logger{50}:%L] [%X{X-B3-TraceId}-%X{X-B3-SpanId}] %msg%n"/>
+	</Properties>
+
+	<appenders>
+		<!--这个输出控制台的配置-->
+		<Console name="STDOUT" >
+			<!--控制台只输出level及以上级别的信息（onMatch），其他的直接拒绝（onMismatch）-->
+			<ThresholdFilter level="${LEVEL}" onMatch="ACCEPT" onMismatch="DENY" />
+			<!-- 输出日志的格式-->
+			<PatternLayout pattern="${PATTERN}" charset="UTF-8"/>
+		</Console>
+
+		<RollingRandomAccessFile name="FILE-INFO" fileName="${FILE_PATH}/info.log" filePattern="${FILE_PATH}/info.%d{yyyy-MM-dd}.log" immediateFlush="false">
+			<ThresholdFilter level="info" onMatch="ACCEPT" onMismatch="DENY" />
+			<PatternLayout pattern="${PATTERN}" charset="UTF-8" />
+			<TimeBasedTriggeringPolicy  interval="1" />
+			<DefaultRolloverStrategy max="60"/>
+		</RollingRandomAccessFile>
+
+
+		<RollingRandomAccessFile name="FILE-DEBUG" fileName="${FILE_PATH}/debug.log"  filePattern="${FILE_PATH}/debug-%d{yyyy-MM-dd}.log" immediateFlush="false">
+			<ThresholdFilter level="debug" onMatch="ACCEPT" onMismatch="DENY" />
+			<PatternLayout pattern="${PATTERN}" charset="UTF-8" />
+			<TimeBasedTriggeringPolicy  interval="1" />
+			<DefaultRolloverStrategy max="60"/>
+		</RollingRandomAccessFile>
+
+		<RollingRandomAccessFile name="FILE-WARN" fileName="${FILE_PATH}/debug.log" filePattern="${FILE_PATH}/warn-%d{yyyy-MM-dd}.log" immediateFlush="false">
+			<ThresholdFilter level="warn" onMatch="ACCEPT" onMismatch="DENY" />
+			<PatternLayout pattern="${PATTERN}" charset="UTF-8" />
+			<TimeBasedTriggeringPolicy  interval="1" />
+			<DefaultRolloverStrategy max="60"/>
+		</RollingRandomAccessFile>
+
+		<RollingRandomAccessFile name="FILE-ERROR" fileName="${FILE_PATH}/error.log" filePattern="${FILE_PATH}/error-%d{yyyy-MM-dd}.log" immediateFlush="false">
+			<ThresholdFilter level="error" onMatch="ACCEPT" onMismatch="DENY" />
+			<PatternLayout pattern="${PATTERN}" charset="UTF-8" />
+			<TimeBasedTriggeringPolicy  interval="1" />
+			<DefaultRolloverStrategy max="60"/>
+		</RollingRandomAccessFile>
+	</appenders>
+
+	<loggers>
+
+		<AsyncRoot level="INFO" includeLocation="false" >
+			<AppenderRef ref="FILE-INFO" />
+			<AppenderRef ref="FILE-WARN" />
+			<AppenderRef ref="FILE-ERROR" />
+			<AppenderRef ref="STDOUT" />
+		</AsyncRoot>
+
+		<AsyncLogger name="org.springframework" level="WARN" />
+
+		<AsyncLogger name="${PACKAGE}" level="${LEVEL}" />
+
+	</loggers>
+</configuration>

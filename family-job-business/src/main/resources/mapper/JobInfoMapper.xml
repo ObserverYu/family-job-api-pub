@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.chen.dao.JobInfoMapper">
+ 
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="org.chen.domain.entity.JobInfo">
+        <id column="id" property="id"/>
+        <result column="name" property="name"/>
+        <result column="type_id" property="typeId"/>
+        <result column="family_id" property="familyId"/>
+        <result column="deleted" property="deleted"/>
+        <result column="sort" property="sort"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+    </resultMap>
+ 
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+            t.id,
+            t.name,
+            t.type_id,
+            t.family_id,
+            t.deleted,
+            t.sort,
+            t.create_time,
+            t.update_time,
+    </sql>
+
+    <!-- 统计映射结果 -->
+    <resultMap id="StatisticsMap" type="org.chen.domain.result.StatisticsResult">
+        <id column="id" property="id"/>
+        <result column="name" property="name"/>
+        <result column="value" property="value"/>
+        <result column="nickName" property="nickName"/>
+        <result column="avatar" property="avatar"/>
+    </resultMap>
+
+    <select id="statisticsNum" resultMap="StatisticsMap">
+        SELECT COUNT(1) AS `value`,j.user_id AS id
+            ,u.nick_name AS nickName,u.nick_name AS `name`,u.avatar AS avatar
+        FROM job_user j
+        LEFT JOIN user_info u ON u.id = j.user_id
+        WHERE j.family_id = #{familyId}
+            <if test="start != null and start != '' and end != null and end != ''">
+                AND j.finish_time BETWEEN #{start} AND #{end}
+            </if>
+            AND j.state = 4
+            GROUP BY j.user_id
+    </select>
+
+    <select id="statisticsPoint" resultMap="StatisticsMap">
+        SELECT SUM(j.points) AS `value`,j.user_id AS id
+        ,u.nick_name AS nickName,u.nick_name AS `name`,u.avatar AS avatar
+        FROM job_user j
+        LEFT JOIN user_info u ON u.id = j.user_id
+        WHERE j.family_id = #{familyId}
+        <if test="start != null and start != '' and end != null and end != ''">
+            AND j.finish_time BETWEEN #{start} AND #{end}
+        </if>
+        AND j.state = 4
+        AND j.create_type in (1,2)
+        GROUP BY j.user_id
+    </select>
+
+    <select id="statisticsItem" resultMap="StatisticsMap">
+        SELECT COUNT(1) AS `value`,j.job_id AS id, i.name AS `name`
+        FROM job_user j
+        LEFT JOIN job_info i ON i.id = j.job_id
+        WHERE j.family_id = #{familyId}
+        <if test="start != null and start != '' and end != null and end != ''">
+            AND j.finish_time BETWEEN #{start} AND #{end}
+        </if>
+        AND j.state = 4
+        GROUP BY j.job_id
+    </select>
+
+</mapper>

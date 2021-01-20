@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <springProperty scope="context" name="log.path" source="logging.path"
+                    defaultValue="/SpringLog/service-address"/>
+	<springProperty scope="context" name="log.level" source="logging.pattern.level"
+					defaultValue="info"/>
+	<springProperty scope="context" name="springAppName"
+					source="spring.application.name"/>
+<!--    &lt;!&ndash; 日志存放路径 &ndash;&gt;
+	<property name="log.path" value="/SpringLog/basic" />-->
+    <!-- 日志输出格式 -->
+	<property name="log.pattern" value="%d{MM-dd HH:mm:ss.SSS} ${springAppName:-} [%X{X-B3-TraceId:-}-%X{X-B3-SpanId:-}] [%thread] %-5level %logger{20} - [%method,%line] - %msg%n" />
+
+
+	<!-- 控制台输出 -->
+	<appender name="console" class="ch.qos.logback.core.ConsoleAppender">
+		<encoder>
+			<pattern>${log.pattern}</pattern>
+		</encoder>
+	</appender>
+
+	<appender name ="async_console" class= "ch.qos.logback.classic.AsyncAppender">
+		<!-- 设置为不丢失日志,默认如果队列的80%已满,则会丢弃TRACT、DEBUG、INFO级别的日志 -->
+		<discardingThreshold >0</discardingThreshold>
+		<!-- 更改默认的队列的深度,默认值为256 -->
+		<queueSize>1000</queueSize>
+		<!--<includeCallerData>true</includeCallerData>-->
+		<appender-ref ref ="console"/>
+	</appender>
+
+
+	<!--&lt;!&ndash; 系统日志输出 &ndash;&gt;-->
+	<!--<appender name="file_info" class="ch.qos.logback.core.rolling.RollingFileAppender">-->
+	    <!--<file>${log.path}/sys-info.log</file>-->
+        <!--&lt;!&ndash; 循环政策：基于时间创建日志文件 &ndash;&gt;-->
+		<!--<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">-->
+            <!--&lt;!&ndash; 日志文件名格式 &ndash;&gt;-->
+			<!--<fileNamePattern>${log.path}/sys-info.%d{yyyy-MM-dd}.log</fileNamePattern>-->
+			<!--&lt;!&ndash; 日志最大的历史 60天 &ndash;&gt;-->
+			<!--<maxHistory>30</maxHistory>-->
+		<!--</rollingPolicy>-->
+		<!--<encoder>-->
+			<!--<pattern>${log.pattern}</pattern>-->
+		<!--</encoder>-->
+		<!--<filter class="ch.qos.logback.classic.filter.LevelFilter">-->
+            <!--&lt;!&ndash; 过滤的级别 &ndash;&gt;-->
+            <!--<level>INFO</level>-->
+            <!--&lt;!&ndash; 匹配时的操作：接收（记录） &ndash;&gt;-->
+            <!--<onMatch>ACCEPT</onMatch>-->
+            <!--&lt;!&ndash; 不匹配时的操作：拒绝（不记录） &ndash;&gt;-->
+<!--&lt;!&ndash;            <onMismatch>DENY</onMismatch>&ndash;&gt;-->
+
+        <!--</filter>-->
+	<!--</appender>-->
+
+	<!--<appender name="file_error" class="ch.qos.logback.core.rolling.RollingFileAppender">-->
+	    <!--<file>${log.path}/sys-error.log</file>-->
+        <!--&lt;!&ndash; 循环政策：基于时间创建日志文件 &ndash;&gt;-->
+        <!--<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">-->
+            <!--&lt;!&ndash; 日志文件名格式 &ndash;&gt;-->
+            <!--<fileNamePattern>${log.path}/sys-error.%d{yyyy-MM-dd}.log</fileNamePattern>-->
+			<!--&lt;!&ndash; 日志最大的历史 60天 &ndash;&gt;-->
+			<!--<maxHistory>30</maxHistory>-->
+        <!--</rollingPolicy>-->
+        <!--<encoder>-->
+            <!--<pattern>${log.pattern}</pattern>-->
+        <!--</encoder>-->
+        <!--<filter class="ch.qos.logback.classic.filter.LevelFilter">-->
+            <!--&lt;!&ndash; 过滤的级别 &ndash;&gt;-->
+            <!--<level>ERROR</level>-->
+			<!--&lt;!&ndash; 匹配时的操作：接收（记录） &ndash;&gt;-->
+            <!--<onMatch>ACCEPT</onMatch>-->
+			<!--&lt;!&ndash; 不匹配时的操作：拒绝（不记录） &ndash;&gt;-->
+            <!--<onMismatch>DENY</onMismatch>-->
+        <!--</filter>-->
+    <!--</appender>-->
+	<!---->
+	<!--&lt;!&ndash;系统操作日志&ndash;&gt;-->
+	<!--<root level="info">-->
+		<!--<appender-ref ref="file_info" />-->
+		<!--<appender-ref ref="file_error" />-->
+	<!--</root>-->
+
+	
+	<!-- 系统模块日志级别控制  -->
+	<logger name="org.chen" level="${log.level}" />
+	<!-- Spring日志级别控制  -->
+	<logger name="org.springframework" level="warn" />
+
+	<root level="info">
+		<!--<appender-ref ref="console" />-->
+		<appender-ref ref="async_console" />
+	</root>
+
+
+</configuration> 

@@ -1,0 +1,271 @@
+# 开发环境配置
+server:
+  # 服务器的HTTP端口，默认为80
+  port: 9410
+  tomcat:
+    # tomcat的URI编码
+    uri-encoding: UTF-8
+    # tomcat最大线程数，默认为200
+    max-threads: 100
+    # Tomcat启动初始化的线程数，默认值25
+    min-spare-threads: 15
+
+# 日志配置
+logging:
+  path: /SpringLog
+  pattern:
+    level: debug
+  package: org.chen
+  config: classpath:log4j2/log4j2.xml
+
+spring:
+
+#  #使用redisson
+#  redis:
+#    enable: false
+#    mode: single
+#
+#  #cloud配置
+#  cloud:
+#    #nacos配置
+#    nacos:
+#      #服务发现
+#      discovery:
+#        server-addr: yournacos-sd.com
+#        namespace: ec222222222222222222222220ab98
+#        #服务分组
+#        group: DEFAULT_GROUP
+#        # 是否开启
+#        enabled: false
+#        #集群名
+#        cluster-name: shanghai
+#
+#    # 限流和升降级
+#    sentinel:
+#      transport:
+#        port: 8719
+#        dashboard: localhost:19410
+#      datasource:
+#        flow:
+#          nacos:
+#            ruleType: flow
+#            serverAddr: yournacossvc.com:80
+#            groupId: "DEFAULT_GROUP"
+#            dataId: base-template-flow-rules
+#            namespace: ec222222222222222222222220ab98
+#        degrade:
+#          nacos:
+#            ruleType: degrade
+#            serverAddr: yournacossvc.com:80
+#            groupId: "DEFAULT_GROUP"
+#            dataId: base-template-degrade-rules
+#            namespace: ec222222222222222222222220ab98
+#      enabled: false
+#      eager: true
+
+  datasource:
+    # 数据源模式  single(单数据源,默认) multi(多数据源) sharding(分片) 当mode为multi时  必须将dynamic.enabled设置为true才能生效
+    mode: single
+    # 单机模式模式
+    single:
+      username: root
+      password: yuchenha
+      driverClassName: com.mysql.cj.jdbc.Driver
+      url: jdbc:mysql://localhost:3306/family_job?serverTimezone=Asia/Shanghai&charset=utf8mb4&useSSL=false
+      platform: mysql
+      type: com.alibaba.druid.pool.DruidDataSource
+      # 下面为连接池的补充设置，应用到上面所有数据源中
+      # 初始化大小，最小，最大
+      initialSize: 1
+      minIdle: 3
+      maxActive: 20
+      # 配置获取连接等待超时的时间
+      maxWait: 60000
+      # 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒
+      timeBetweenEvictionRunsMillis: 60000
+      # 配置一个连接在池中最小生存的时间，单位是毫秒
+      minEvictableIdleTimeMillis: 30000
+      validationQuery: select 'x'
+      testWhileIdle: true
+      testOnBorrow: false
+      testOnReturn: false
+      # 打开PSCache，并且指定每个连接上PSCache的大小
+      poolPreparedStatements: true
+      maxPoolPreparedStatementPerConnectionSize: 20
+      # 配置监控统计拦截的filters，去掉后监控界面sql无法统计，'wall'用于防火墙
+      filters: stat,wall,slf4j
+      #filters: wall
+      # 通过connectProperties属性来打开mergeSql功能；慢SQL记录
+      connectionProperties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=5000
+      # 合并多个DruidDataSource的监控数据
+      useGlobalDataSourceStat: true
+
+#    # 分片模式配置
+#    sharding:
+#    - dsname: electric_0
+#      username: root
+#      password: yourpassword
+#      driver-class-name: com.mysql.cj.jdbc.Driver
+#      url: jdbc:mysql://localhost:3306/electric_0?serverTimezone=Asia/Shanghai&charset=utf8mb4&useSSL=false
+#      platform: mysql
+#      type: com.alibaba.druid.pool.DruidDataSource
+#      # 下面为连接池的补充设置，应用到上面所有数据源中
+#      # 初始化大小，最小，最大
+#      initialSize: 1
+#      minIdle: 3
+#      maxActive: 20
+#      # 配置获取连接等待超时的时间
+#      maxWait: 60000
+#      # 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒
+#      timeBetweenEvictionRunsMillis: 60000
+#      # 配置一个连接在池中最小生存的时间，单位是毫秒
+#      minEvictableIdleTimeMillis: 30000
+#      validationQuery: select 'x'
+#      testWhileIdle: true
+#      testOnBorrow: false
+#      testOnReturn: false
+#      # 打开PSCache，并且指定每个连接上PSCache的大小
+#      poolPreparedStatements: true
+#      maxPoolPreparedStatementPerConnectionSize: 20
+#      # 配置监控统计拦截的filters，去掉后监控界面sql无法统计，'wall'用于防火墙
+#      filters: stat,wall,slf4j
+#      #filters: wall
+#      # 通过connectProperties属性来打开mergeSql功能；慢SQL记录
+#      connectionProperties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=5000
+#      # 合并多个DruidDataSource的监控数据
+#      useGlobalDataSourceStat: true
+#    - dsname: electric_1
+#      username: root
+#      password: yourpassword
+#      driver-class-name: com.mysql.cj.jdbc.Driver
+#      url: jdbc:mysql://localhost:3306/electric_1?serverTimezone=Asia/Shanghai&charset=utf8mb4&useSSL=false
+#      platform: mysql
+#      type: com.alibaba.druid.pool.DruidDataSource
+#      # 下面为连接池的补充设置，应用到上面所有数据源中
+#      # 初始化大小，最小，最大
+#      initialSize: 1
+#      minIdle: 3
+#      maxActive: 20
+#      # 配置获取连接等待超时的时间
+#      maxWait: 60000
+#      # 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒
+#      timeBetweenEvictionRunsMillis: 60000
+#      # 配置一个连接在池中最小生存的时间，单位是毫秒
+#      minEvictableIdleTimeMillis: 30000
+#      validationQuery: select 'x'
+#      testWhileIdle: true
+#      testOnBorrow: false
+#      testOnReturn: false
+#      # 打开PSCache，并且指定每个连接上PSCache的大小
+#      poolPreparedStatements: true
+#      maxPoolPreparedStatementPerConnectionSize: 20
+#      # 配置监控统计拦截的filters，去掉后监控界面sql无法统计，'wall'用于防火墙
+#      filters: stat,wall,slf4j
+#      #filters: wall
+#      # 通过connectProperties属性来打开mergeSql功能；慢SQL记录
+#      connectionProperties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=5000
+#      # 合并多个DruidDataSource的监控数据
+#      useGlobalDataSourceStat: true
+#    - dsname: electric_2
+#      username: root
+#      password: yourpassword
+#      driver-class-name: com.mysql.cj.jdbc.Driver
+#      url: jdbc:mysql://localhost:3306/electric_2?serverTimezone=Asia/Shanghai&charset=utf8mb4&useSSL=false
+#      platform: mysql
+#      type: com.alibaba.druid.pool.DruidDataSource
+#      # 下面为连接池的补充设置，应用到上面所有数据源中
+#      # 初始化大小，最小，最大
+#      initialSize: 1
+#      minIdle: 3
+#      maxActive: 20
+#      # 配置获取连接等待超时的时间
+#      maxWait: 60000
+#      # 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒
+#      timeBetweenEvictionRunsMillis: 60000
+#      # 配置一个连接在池中最小生存的时间，单位是毫秒
+#      minEvictableIdleTimeMillis: 30000
+#      validationQuery: select 'x'
+#      testWhileIdle: true
+#      testOnBorrow: false
+#      testOnReturn: false
+#      # 打开PSCache，并且指定每个连接上PSCache的大小
+#      poolPreparedStatements: true
+#      maxPoolPreparedStatementPerConnectionSize: 20
+#      # 配置监控统计拦截的filters，去掉后监控界面sql无法统计，'wall'用于防火墙
+#      filters: stat,wall,slf4j
+#      #filters: wall
+#      # 通过connectProperties属性来打开mergeSql功能；慢SQL记录
+#      connectionProperties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=5000
+#      # 合并多个DruidDataSource的监控数据
+#      useGlobalDataSourceStat: true
+#    - dsname: electric_3
+#      username: root
+#      password: yourpassword
+#      driver-class-name: com.mysql.cj.jdbc.Driver
+#      url: jdbc:mysql://localhost:3306/electric_3?serverTimezone=Asia/Shanghai&charset=utf8mb4&useSSL=false
+#      platform: mysql
+#      type: com.alibaba.druid.pool.DruidDataSource
+#      # 下面为连接池的补充设置，应用到上面所有数据源中
+#      # 初始化大小，最小，最大
+#      initialSize: 1
+#      minIdle: 3
+#      maxActive: 20
+#      # 配置获取连接等待超时的时间
+#      maxWait: 60000
+#      # 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒
+#      timeBetweenEvictionRunsMillis: 60000
+#      # 配置一个连接在池中最小生存的时间，单位是毫秒
+#      minEvictableIdleTimeMillis: 30000
+#      validationQuery: select 'x'
+#      testWhileIdle: true
+#      testOnBorrow: false
+#      testOnReturn: false
+#      # 打开PSCache，并且指定每个连接上PSCache的大小
+#      poolPreparedStatements: true
+#      maxPoolPreparedStatementPerConnectionSize: 20
+#      # 配置监控统计拦截的filters，去掉后监控界面sql无法统计，'wall'用于防火墙
+#      filters: stat,wall,slf4j
+#      #filters: wall
+#      # 通过connectProperties属性来打开mergeSql功能；慢SQL记录
+#      connectionProperties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=5000
+#      # 合并多个DruidDataSource的监控数据
+#      useGlobalDataSourceStat: true
+#    # 多数据源模式配置
+    dynamic:
+      enabled: false
+      primary: prod #设置默认的数据源或者数据源组,默认值即为prod
+      datasource:
+        prod:  # 数据源的名字:master
+          username: root
+          password: yourpassword
+          driver-class-name: com.mysql.cj.jdbc.Driver
+          url: jdbc:mysql://localhost:3306/huidao_prod_0728?serverTimezone=Asia/Shanghai&charset=utf8mb4&useSSL=false
+        test:   # 数据源的名字:slave_1
+          username: root
+          password: yourpassword
+          driver-class-name: com.mysql.cj.jdbc.Driver
+          url: jdbc:mysql://localhost:3306/huidao_test?serverTimezone=Asia/Shanghai&charset=utf8mb4&useSSL=false
+
+leaf:
+  name: leaf-dev
+  segment:
+    enable: false
+    jdbcPassword: ''
+    jdbcUrl: ''
+    jdbcUsername: ''
+  snowflake:
+    enable: false
+    twepoch:
+    port: '10081'
+    zkAddress: 'localhost:2181'
+
+redisprefix:
+  tokenPrefix: "family-job:token:"
+  # token过期时间:天
+  tokenExpireTime: 7
+  tokenHeader: auth-token
+  noRepeatPrefix: "family-job:norepeat:"
+  # 重复提交过期时间:分钟
+  noRepeatExpireTime: 1
+  weixinTokenPrefix: "family-job:weixinAccessToken:"
+  weixinTokenLock: "family-job:lock:weixinAccessToken"

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.chen.dao.StepRecordMapper">
+ 
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="org.chen.domain.entity.StepRecord">
+        <id column="id" property="id"/>
+        <result column="week_step" property="weekStep"/>
+        <result column="week_start_date" property="weekStartDate"/>
+        <result column="remaining_step" property="remainingStep"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="version" property="version"/>
+    </resultMap>
+ 
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+            t.id,
+            t.week_step,
+            t.week_start_date,
+            t.remaining_step,
+            t.create_time,
+            t.update_time,
+            t.version,
+    </sql>
+
+
+    <update id="updateRemainingStepWithLock">
+        UPDATE step_record
+        SET update_time = #{stepRecord.updateTime}
+            ,version = #{stepRecord.version} + 1
+            ,remaining_step = #{stepRecord.remainingStep}
+        WHERE id = #{stepRecord.id}
+              AND version = #{stepRecord.version}
+    </update>
+</mapper>
